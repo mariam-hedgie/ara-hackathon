@@ -10,8 +10,14 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from tools.memory import retrieve_notes, store_note
+from tools.memory import retrieve_notes, retrieve_project_notes, store_note, store_project_note
 from tools.paper_parser import parse_text
+from tools.research_manager import (
+    compare_paper_to_project,
+    generate_morning_brief,
+    ingest_paper,
+    plan_submission,
+)
 from tools.reasoning import generate_insight
 from tools.transcribe import transcribe_audio
 
@@ -44,10 +50,12 @@ def run_pipeline() -> dict:
 app = ara.Automation(
     "research-brain",
     system_instructions=(
-        "You are a scientific research assistant. Prefer structured output and be concise. "
-        "Use the run_pipeline tool to process research transcript input into parsed scientific "
-        "components, a concise insight, and one key limitation or counterpoint. "
-        "Keep responses brief, clear, and demo-friendly."
+        "You are a scientific research assistant. Prefer concise, structured output. "
+        "Use run_pipeline for transcript-based research capture. Use ingest_paper when the user "
+        "pastes a new paper or abstract. Use compare_paper_to_project to judge whether a paper "
+        "supports or contradicts an existing project. Use plan_submission for venue planning and "
+        "generate_morning_brief for project summaries and todos. Include one key limitation or "
+        "counterpoint when giving research advice."
     ),
     tools=[
         transcribe_audio,
@@ -55,6 +63,12 @@ app = ara.Automation(
         generate_insight,
         store_note,
         retrieve_notes,
+        store_project_note,
+        retrieve_project_notes,
+        ingest_paper,
+        compare_paper_to_project,
+        plan_submission,
+        generate_morning_brief,
         run_pipeline,
     ],
 )
