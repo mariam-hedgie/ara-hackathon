@@ -1,0 +1,256 @@
+:root {
+  color-scheme: light;
+  --bg: #edf2f7;
+  --panel: rgba(255, 255, 255, 0.92);
+  --border: rgba(15, 23, 42, 0.08);
+  --text: #0f172a;
+  --muted: #526072;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --shadow: 0 28px 80px rgba(15, 23, 42, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Avenir Next", "Segoe UI", sans-serif;
+  color: var(--text);
+  background:
+    radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 34%),
+    linear-gradient(180deg, #f8fbfd 0%, var(--bg) 100%);
+}
+
+.shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 32px auto;
+  display: grid;
+  grid-template-columns: minmax(320px, 460px) minmax(0, 1fr);
+  gap: 24px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+}
+
+.panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.eyebrow,
+.meta-label {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+h1,
+h2 {
+  margin: 4px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 600;
+}
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.prompt-examples {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.chip {
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: rgba(15, 118, 110, 0.28);
+  background: rgba(255, 255, 255, 1);
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field span,
+.hint {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  resize: vertical;
+  font: inherit;
+  color: inherit;
+  background: rgba(248, 250, 252, 0.96);
+}
+
+textarea:focus {
+  outline: 2px solid rgba(15, 118, 110, 0.18);
+  border-color: rgba(15, 118, 110, 0.32);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.controls.compact {
+  margin-top: 0;
+}
+
+button,
+.file-picker span {
+  border: none;
+  border-radius: 14px;
+  padding: 12px 16px;
+  font: inherit;
+  cursor: pointer;
+  transition: transform 120ms ease, opacity 120ms ease, background 120ms ease;
+}
+
+button:hover,
+.file-picker:hover span {
+  transform: translateY(-1px);
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+  transform: none;
+}
+
+.primary {
+  background: var(--accent);
+  color: white;
+}
+
+.secondary,
+.file-picker span {
+  background: #e8eef4;
+  color: var(--text);
+}
+
+.file-picker input {
+  display: none;
+}
+
+.attachment-list {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+  display: grid;
+  gap: 8px;
+}
+
+.attachment-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(232, 238, 244, 0.86);
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.attachment-list button {
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.08);
+}
+
+.results {
+  min-height: 620px;
+}
+
+.meta {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 18px;
+}
+
+.meta > div {
+  display: grid;
+  gap: 4px;
+}
+
+.markdown-output {
+  min-height: 420px;
+  padding: 20px 22px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: rgba(248, 250, 252, 0.95);
+  line-height: 1.6;
+}
+
+.markdown-output.empty {
+  color: var(--muted);
+}
+
+.markdown-output h3 {
+  margin: 0 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 24px;
+}
+
+.markdown-output p {
+  margin: 0 0 14px;
+}
+
+.markdown-output ol {
+  margin: 0 0 18px 20px;
+  padding: 0;
+}
+
+.markdown-output li {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 920px) {
+  .shell {
+    grid-template-columns: 1fr;
+  }
+
+  .results {
+    min-height: unset;
+  }
+}
