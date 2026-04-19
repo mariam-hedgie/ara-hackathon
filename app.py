@@ -36,10 +36,10 @@ def run_pipeline() -> dict:
 app = ara.Automation(
     "research-brain",
     system_instructions=(
-        "Reply with one short hello message and include UTC time. "
-        "Use transcribe first when available so you can include the input text. "
-        "If linq_send_message is available and a phone route is paired, "
-        "send the same message there once."
+        "You are a scientific research assistant. Prefer structured output and be concise. "
+        "Use the run_pipeline tool to process research transcript input into parsed scientific "
+        "components, a concise insight, and one key limitation or counterpoint. "
+        "Keep responses brief, clear, and demo-friendly."
     ),
     tools=[
         transcribe_audio,
