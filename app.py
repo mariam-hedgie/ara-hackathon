@@ -1,20 +1,52 @@
+"""Ara orchestration entrypoint for the Research Brain demo."""
+
 import ara_sdk as ara
 
-from tools.transcribe import transcribe
+from tools.memory import retrieve_notes, store_note
+from tools.paper_parser import parse_text
+from tools.reasoning import generate_insight
+from tools.transcribe import transcribe_audio
+
 
 @ara.tool
-def utc_now() -> dict:
-    from datetime import datetime, timezone
-    return {"utc_time": datetime.now(timezone.utc).isoformat()}
+def run_pipeline() -> dict:
+    """Run the end-to-end research pipeline and return structured demo output."""
+    transcript = transcribe_audio() or {}
+    transcript_text = str(transcript.get("text") or "").strip()
 
-ara.Automation(
-    "hello-hourly-agent",
+    parsed = parse_text(text=transcript_text) or {}
+    reasoning = generate_insight(parsed=parsed) or {}
+
+    # Persist the full pipeline result so the demo can show memory growth.
+    note = {
+        "transcript": transcript_text,
+        "parsed": parsed,
+        "reasoning": reasoning,
+    }
+    store_note(note)
+
+    memory = retrieve_notes() or []
+    return {
+        "parsed": parsed,
+        "reasoning": reasoning,
+        "memory_size": len(memory),
+    }
+
+
+app = ara.Automation(
+    "research-brain",
     system_instructions=(
         "Reply with one short hello message and include UTC time. "
-        "Use transcribe first when available. "
-        "Only include transcribed input text when transcribe returns ok=true. "
+        "Use transcribe first when available so you can include the input text. "
         "If linq_send_message is available and a phone route is paired, "
         "send the same message there once."
     ),
-    tools=[utc_now, transcribe],
+    tools=[
+        transcribe_audio,
+        parse_text,
+        generate_insight,
+        store_note,
+        retrieve_notes,
+        run_pipeline,
+    ],
 )
