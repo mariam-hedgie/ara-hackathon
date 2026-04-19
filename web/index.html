@@ -3,80 +3,213 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Voice Research Agent</title>
+    <title>Voice Research Agent Workspace</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <main class="shell">
-      <section class="panel composer">
-        <p class="eyebrow">PROMPT COMPOSER</p>
+    <main class="workspace">
+      <aside class="panel sidebar">
         <div class="panel-header">
           <div>
-            <h1>Ask the agent</h1>
-            <p id="status-line" class="status-pill">Ara bridge ready</p>
+            <p class="eyebrow">PROJECTS</p>
+            <h1>Research Workspace</h1>
           </div>
+          <p id="status-line" class="status-pill">Loading projects...</p>
         </div>
 
-        <div class="prompt-examples">
-          <button class="chip" data-prompt="Research lightweight wake-word detection for edge AI devices.">
-            Research lightweight wake-word detection for edge AI devices.
-          </button>
-          <button class="chip" data-prompt="Compare on-device speech-to-text options for a hackathon MVP.">
-            Compare on-device speech-to-text options for a hackathon MVP.
-          </button>
-          <button class="chip" data-prompt="Design a voice-first UX flow for follow-up research questions.">
-            Design a voice-first UX flow for follow-up research questions.
-          </button>
-        </div>
-
-        <label class="field">
-          <span>Prompt</span>
-          <textarea id="prompt-input" rows="7" placeholder="Ask a research question for your voice-activated agent."></textarea>
-        </label>
-
-        <div class="controls">
-          <label class="file-picker">
-            <input id="file-input" type="file" multiple />
-            <span>Attach files</span>
+        <form id="project-form" class="stacked-form">
+          <label class="field">
+            <span>New project</span>
+            <input id="project-name" type="text" placeholder="Voice agent for researchers" />
           </label>
-          <span class="hint">Text files are inlined into the Ara request for context.</span>
-        </div>
-        <ul id="attachment-list" class="attachment-list"></ul>
+          <label class="field">
+            <span>Description</span>
+            <textarea id="project-description" rows="3" placeholder="What is this project trying to prove or ship?"></textarea>
+          </label>
+          <button type="submit" class="primary">Create project</button>
+        </form>
 
-        <div class="controls">
-          <button id="start-dictation" class="secondary">Start dictation</button>
-          <button id="stop-dictation" class="secondary" disabled>Stop dictation</button>
-          <button id="send-button" class="primary">Send to Ara</button>
+        <div class="project-list-wrap">
+          <div class="section-title-row">
+            <p class="eyebrow">Saved projects</p>
+          </div>
+          <div id="project-list" class="project-list"></div>
         </div>
+      </aside>
+
+      <section class="main-column">
+        <section class="panel project-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">ACTIVE PROJECT</p>
+              <h2 id="selected-project-name">Select or create a project</h2>
+              <p id="selected-project-description" class="muted">
+                All papers, notes, contradictions, and briefs stay scoped to the selected project.
+              </p>
+            </div>
+            <div class="project-stats">
+              <div class="stat-card">
+                <span class="meta-label">Papers</span>
+                <strong id="paper-count">0</strong>
+              </div>
+              <div class="stat-card">
+                <span class="meta-label">Memory</span>
+                <strong id="memory-count">0</strong>
+              </div>
+              <div class="stat-card">
+                <span class="meta-label">Conflicts</span>
+                <strong id="contradiction-count">0</strong>
+              </div>
+              <div class="stat-card">
+                <span class="meta-label">Briefs</span>
+                <strong id="brief-count">0</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="workflow-grid">
+            <label class="field span-2">
+              <span>Ask the project agent</span>
+              <textarea
+                id="prompt-input"
+                rows="4"
+                placeholder="Ask a project-scoped research question or request a comparison."
+              ></textarea>
+            </label>
+
+            <label class="field">
+              <span>Paper title</span>
+              <input id="source-title" type="text" placeholder="Optional title for the paper, repo, or note" />
+            </label>
+
+            <label class="field">
+              <span>Link ingestion</span>
+              <input id="link-input" type="url" placeholder="ArXiv, GitHub repo, article, or Google Drive link" />
+            </label>
+
+            <label class="field span-2">
+              <span>Pasted text</span>
+              <textarea
+                id="pasted-text-input"
+                rows="6"
+                placeholder="Paste an abstract, a paper excerpt, repo notes, or raw source text here."
+              ></textarea>
+            </label>
+
+            <label class="field span-2">
+              <span>Voice note transcript</span>
+              <textarea
+                id="voice-note-input"
+                rows="4"
+                placeholder="Optional voice note transcript. Browser speech recognition can fill this in."
+              ></textarea>
+            </label>
+          </div>
+
+          <div class="controls">
+            <label class="file-picker">
+              <input id="file-input" type="file" multiple />
+              <span>Attach text, PDF, or audio</span>
+            </label>
+            <button id="start-voice-note" class="secondary" type="button">Start voice note</button>
+            <button id="stop-voice-note" class="secondary" type="button" disabled>Stop voice note</button>
+            <button id="ask-button" class="secondary" type="button">Ask Ara</button>
+            <button id="ingest-button" class="primary" type="button">Ingest source</button>
+            <button id="compare-button" class="secondary" type="button">Compare latest</button>
+            <button id="contradiction-button" class="secondary" type="button">Contradiction finder</button>
+            <button id="brief-button" class="secondary" type="button">Morning brief</button>
+          </div>
+
+          <ul id="attachment-list" class="attachment-list"></ul>
+        </section>
+
+        <section class="panel output-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">LATEST OUTPUT</p>
+              <h2 id="output-kind">Workflow result</h2>
+            </div>
+            <div class="controls compact">
+              <button id="speak-button" class="secondary" type="button" disabled>Speak answer</button>
+              <button id="stop-speaking" class="secondary" type="button" disabled>Stop speaking</button>
+            </div>
+          </div>
+
+          <article id="output" class="markdown-output empty">
+            Create a project to start ingesting papers, storing memory, and generating research briefs.
+          </article>
+
+          <div class="structured-grid">
+            <section class="structured-card">
+              <p class="meta-label">Claim</p>
+              <p id="claim-value">Waiting for the first ingestion.</p>
+            </section>
+            <section class="structured-card">
+              <p class="meta-label">Evidence</p>
+              <p id="evidence-value">Waiting for the first ingestion.</p>
+            </section>
+            <section class="structured-card">
+              <p class="meta-label">Gap</p>
+              <p id="gap-value">Waiting for the first ingestion.</p>
+            </section>
+            <section class="structured-card">
+              <p class="meta-label">Limitation</p>
+              <p id="limitation-value">Waiting for the first ingestion.</p>
+            </section>
+            <section class="structured-card span-2">
+              <p class="meta-label">Relevance to project</p>
+              <p id="relevance-value">Waiting for the first ingestion.</p>
+            </section>
+          </div>
+        </section>
       </section>
 
-      <section class="panel results">
-        <div class="panel-header">
-          <div>
-            <p class="eyebrow">OUTPUT</p>
-            <h2>Research response</h2>
+      <aside class="panel detail-panel">
+        <section class="detail-section">
+          <div class="section-title-row">
+            <div>
+              <p class="eyebrow">MEMORY</p>
+              <h3>Persistent notes</h3>
+            </div>
           </div>
-          <div class="controls compact">
-            <button id="speak-button" class="secondary" disabled>Speak answer</button>
-            <button id="stop-speaking" class="secondary" disabled>Stop speaking</button>
-          </div>
-        </div>
+          <label class="field">
+            <span>Add project memory</span>
+            <textarea id="memory-input" rows="3" placeholder="Store a key insight, question, or decision for later sessions."></textarea>
+          </label>
+          <button id="save-memory-button" class="secondary" type="button">Save memory note</button>
+          <div id="memory-list" class="item-list"></div>
+        </section>
 
-        <div class="meta">
-          <div>
-            <span class="meta-label">RUN</span>
-            <span id="run-id">-</span>
+        <section class="detail-section">
+          <div class="section-title-row">
+            <div>
+              <p class="eyebrow">PAPERS</p>
+              <h3>Stored sources</h3>
+            </div>
           </div>
-          <div>
-            <span class="meta-label">STATE</span>
-            <span id="run-state">-</span>
-          </div>
-        </div>
+          <div id="paper-list" class="item-list"></div>
+        </section>
 
-        <article id="output" class="markdown-output empty">
-          Send a prompt to see a structured research response here.
-        </article>
-      </section>
+        <section class="detail-section">
+          <div class="section-title-row">
+            <div>
+              <p class="eyebrow">BRIEFS</p>
+              <h3>Daily summaries</h3>
+            </div>
+          </div>
+          <div id="brief-list" class="item-list"></div>
+        </section>
+
+        <section class="detail-section">
+          <div class="section-title-row">
+            <div>
+              <p class="eyebrow">CONTRADICTIONS</p>
+              <h3>Conflict tracker</h3>
+            </div>
+          </div>
+          <div id="contradiction-list" class="item-list"></div>
+        </section>
+      </aside>
     </main>
 
     <script src="./app.js" defer></script>
