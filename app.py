@@ -1,5 +1,7 @@
 import ara_sdk as ara
 
+from tools.transcribe import transcribe
+
 @ara.tool
 def utc_now() -> dict:
     from datetime import datetime, timezone
@@ -9,8 +11,9 @@ ara.Automation(
     "hello-hourly-agent",
     system_instructions=(
         "Reply with one short hello message and include UTC time. "
+        "Use transcribe first when available so you can include the input text. "
         "If linq_send_message is available and a phone route is paired, "
         "send the same message there once."
     ),
-    tools=[utc_now],
+    tools=[utc_now, transcribe],
 )
